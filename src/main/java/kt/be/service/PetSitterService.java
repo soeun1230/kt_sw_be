@@ -23,8 +23,7 @@ public class PetSitterService {
         Map<String, String> response = new HashMap<>();
         try{
             WaitForGrantMember waitForGrantMember = new WaitForGrantMember();
-            waitForGrantMember.setUser(petSitterInfo.getUserId());
-            waitForGrantMember.setPetSitterInfo(petSitterInfo);
+            waitForGrantMember.setService(petSitterInfo.getService());
             waitForGrantRepository.save(waitForGrantMember);
             response.put("message", "request success");
         }catch (Exception e){

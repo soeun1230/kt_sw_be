@@ -1,8 +1,6 @@
 package kt.be.model.members;
 
 import jakarta.persistence.*;
-import kt.be.model.dto.PetSitterDto;
-import kt.be.model.dto.PetSitterInfoDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,15 +18,22 @@ public class WaitForGrantMember {
 
     @Column(name = "address")
     private String address;
-    @Column(name = "possiblePet")
+    @Column(name = "possible_pet")
     private Integer possiblePet;
-    @Column(name = "possibleTime")
+    @Column(name = "possible_time")
     private String possibleTime;
+    @Column(name = "cost_per_hour")
     private Long costPerHour;
+    @Column(name = "info")
     private String info;
+    @Column(name = "work_exp")
     private String workExp;
+    @Column(name = "sitter_image")
     private byte[] SitterImage;
+    @Column(name = "cert")
     private byte[] cert;
+    @Column(name = "service")
     private Integer service;
+    @Column(name = "possible_size")
     private Integer possibleSize;
 }
