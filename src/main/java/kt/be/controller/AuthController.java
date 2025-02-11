@@ -35,10 +35,4 @@ public class AuthController {
         String newAccessToken = authService.refreshAccessToken(refreshToken);
         return ResponseEntity.ok(Map.of("access_token", newAccessToken));
     }
-
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> test(@RequestBody Map<String, String> request){
-        String[] tokens = authService.login(request.get("email"), request.get("password"));
-        return ResponseEntity.ok(Map.of("access_token",tokens[0], "refresh_token",tokens[1]));
-    }
 }
