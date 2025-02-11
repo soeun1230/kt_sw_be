@@ -15,7 +15,7 @@ public class PetSitterService {
     private final PetSitterRepository petSitterRepository;
     private final UserRepository userRepository;
 
-    public Map<String, String> applyGrantToManager(String user){
+    public Map<String, String> applyGrantToManager(PetSitterDto petSitterInfo){
 
     }
 }
