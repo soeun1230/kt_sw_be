@@ -43,6 +43,9 @@ public class UserMember implements UserDetails {
     @OneToOne(mappedBy = "user")
     private PetSitterMember petSitterMember;
 
+    @OneToOne(mappedBy = "user")
+    private WaitForGrantMember waitForGrantMember;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
