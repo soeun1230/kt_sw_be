@@ -1,6 +1,6 @@
 package kt.be.service;
 
-import kt.be.model.dto.PetSitterDto;
+import kt.be.model.dto.PetSitterInfoDto;
 import kt.be.model.members.PetSitterMember;
 import kt.be.model.members.WaitForGrantMember;
 import kt.be.model.repository.PetSitterRepository;
@@ -19,11 +19,11 @@ public class PetSitterService {
     private final UserRepository userRepository;
     private final WaitForGrantRepository waitForGrantRepository;
 
-    public Map<String, String> applyGrantToManager(PetSitterDto petSitterInfo){
+    public Map<String, String> applyGrantToManager(PetSitterInfoDto petSitterInfo){
         Map<String, String> response = new HashMap<>();
         try{
             WaitForGrantMember waitForGrantMember = new WaitForGrantMember();
-            waitForGrantMember.setUser(petSitterInfo.getUser());
+            waitForGrantMember.setUser(petSitterInfo.getUserId());
             waitForGrantMember.setPetSitterInfo(petSitterInfo);
             waitForGrantRepository.save(waitForGrantMember);
             response.put("message", "request success");

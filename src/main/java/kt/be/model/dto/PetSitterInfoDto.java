@@ -1,18 +1,14 @@
 package kt.be.model.dto;
 
-import kt.be.model.members.UserMember;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Repository;
 
 @Getter
 @Setter
-@Repository
 @RequiredArgsConstructor
-public class PetSitterDto {
-    private Long petSitterId;
-    private UserMember user;
+public class PetSitterInfoDto {
+    private Long userId;
     private String address;
     private Integer possiblePet;
     private String possibleTime;
