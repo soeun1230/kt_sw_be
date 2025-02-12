@@ -1,19 +1,22 @@
 package kt.be.service;
 
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import kt.be.components.JwtUtil;
 import kt.be.model.members.ShopCartMember;
 import kt.be.model.members.UserMember;
 import kt.be.model.repository.ShopCartRepository;
 import kt.be.model.repository.UserRepository;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AuthService {
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
+    
     private final UserRepository userRepository;
     private final ShopCartRepository shopCartRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -58,7 +61,11 @@ public class AuthService {
         String accessToken = jwtUtil.generateAccessToken(email);
         String refreshToken = jwtUtil.generateRefreshToken(email);
 
-        return new String[] { accessToken, refreshToken };
+        UserMember user = userRepository.findByEmail(email).get();
+
+        Long userId = user.getUserId();
+        
+        return new String[] { accessToken, refreshToken, userId.toString()};
     }
 
     // Refresh Token을 이용해 새로운 Access Token 발급

@@ -1,18 +1,27 @@
 package kt.be.controller;
 
 
-import kt.be.service.AuthService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import kt.be.service.AuthService;
+import kt.be.service.BasicUserService;
 
 @RestController
 public class AuthController {
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final AuthService authService;
+    private final BasicUserService basicUserService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, BasicUserService basicUserService) {
         this.authService = authService;
+        this.basicUserService = basicUserService;
     }
 
     @PostMapping("/api/auth/register")
@@ -24,9 +33,13 @@ public class AuthController {
     }
 
     @PostMapping("/api/auth/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> request) {
         String[] tokens = authService.login(request.get("email"), request.get("password"));
-        return ResponseEntity.ok(Map.of("access_token", tokens[0], "refresh_token", tokens[1]));
+        Long userId = Long.parseLong(tokens[2]);
+
+        Map<String, String> userInfo = basicUserService.getUserInfo(userId);
+
+        return ResponseEntity.ok(Map.of("access_token", tokens[0], "refresh_token", tokens[1], "userId", userId, "name", userInfo.get("name"), "email",userInfo.get("email")));
     }
 
     @PostMapping("/api/auth/refresh")
