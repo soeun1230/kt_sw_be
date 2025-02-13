@@ -37,9 +37,9 @@ public class AuthController {
         String[] tokens = authService.login(request.get("email"), request.get("password"));
         Long userId = Long.parseLong(tokens[2]);
 
-        Map<String, String> userInfo = basicUserService.getUserInfo(userId);
+        Map<String, Object> userInfo = basicUserService.getUserInfo(userId);
 
-        return ResponseEntity.ok(Map.of("access_token", tokens[0], "refresh_token", tokens[1], "userId", userId, "name", userInfo.get("name"), "email",userInfo.get("email")));
+        return ResponseEntity.ok(Map.of("access_token", tokens[0], "refresh_token", tokens[1], "userId", userId, "name", userInfo.get("name"), "email",userInfo.get("email"), "phone", userInfo.get("phone")));
     }
 
     @PostMapping("/api/auth/refresh")

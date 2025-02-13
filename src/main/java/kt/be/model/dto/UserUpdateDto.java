@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class UserUpdateDto {
+    private Long userId;
     private String password;
     private String userName;
     private String userPhone;

@@ -7,18 +7,25 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import kt.be.model.members.UserMember;
 import kt.be.model.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class BasicUserService {
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
     private static final Logger logger = LoggerFactory.getLogger(BasicUserService.class);
+
+    public BasicUserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
+        this.userRepository = userRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
 
     @Transactional
     public Map<String, String> userWithdraw(Long userId){
@@ -34,8 +41,10 @@ public class BasicUserService {
     public Map<String, Object> updateUser(Long userId, String pw, String phone, String name){
         Map<String, Object> updatedInfo = new HashMap<>();
         UserMember userMember = userRepository.findByUserId(userId).get();
+
         if(pw!=null){
             userMember.setPassword(pw);
+            userMember.setPassword(passwordEncoder.encode(pw));
         }
         if(name!=null){
             userMember.setUserName(name);
@@ -51,8 +60,8 @@ public class BasicUserService {
         return updatedInfo;
     }
     
-    public Map<String, String> getUserInfo(Long userId){
-        Map<String, String> userInfo = new HashMap<>();
+    public Map<String, Object> getUserInfo(Long userId){
+        Map<String, Object> userInfo = new HashMap<>();
         
         try {
             Optional<UserMember> optionalUser = userRepository.findByUserId(userId);
@@ -62,6 +71,7 @@ public class BasicUserService {
             logger.info("userName: {}", userMember.getUsername());
             userInfo.put("name",userMember.userName);
             userInfo.put("email", userMember.getEmail());
+            userInfo.put("phone", userMember.getUserPhone());
         } catch (Exception e) {
             userInfo.put("error",e.getMessage());
         }
