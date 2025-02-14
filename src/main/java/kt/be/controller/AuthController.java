@@ -36,10 +36,11 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> request) {
         String[] tokens = authService.login(request.get("email"), request.get("password"));
         Long userId = Long.parseLong(tokens[2]);
+        Long petSitterId = Long.parseLong(tokens[3]);
 
         Map<String, Object> userInfo = basicUserService.getUserInfo(userId);
 
-        return ResponseEntity.ok(Map.of("access_token", tokens[0], "refresh_token", tokens[1], "userId", userId, "name", userInfo.get("name"), "email",userInfo.get("email"), "phone", userInfo.get("phone")));
+        return ResponseEntity.ok(Map.of("access_token", tokens[0], "refresh_token", tokens[1], "userId", userId, "name", userInfo.get("name"), "email",userInfo.get("email"), "phone", userInfo.get("phone"), "userCode", userInfo.get("userCode"), "petSitterId",petSitterId));
     }
 
     @PostMapping("/api/auth/refresh")

@@ -1,5 +1,7 @@
 package kt.be.model.dto;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -8,16 +10,16 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class PetSitterInfoDto {
-    private Long userId;
+    private String userId;
     private String address;
-    private Integer possiblePet;
+    private List<String> possiblePet;
     private String possibleTime;
     private Long costPerHour;
     private String info;
     private String workExp;
-    private byte[] SitterImage;
+    private byte[] sitterImage;
     private byte[] cert;
-    private Integer service;
-    private Integer possibleSize;
+    private String service;
+    private String possibleSize;
 
 }

@@ -1,5 +1,6 @@
 package kt.be.config;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,7 @@ public class SecurityConfig {
                         //.requestMatchers("/api/users/**").permitAll()
                         //.requestMatchers("/api/users/**").hasRole("USER")
                         .requestMatchers("/api/petsitter/**").hasRole("PETSITTER")
+                        //.requestMatchers(HttpMethod.PATCH, "/api/users/{userId}/pets/{petId}").permitAll() 
                         .anyRequest().authenticated() // 그 외의 요청은 인증 필요
                 )
                         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -59,7 +61,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        //configuration.setAllowedOrigins(List.of("http://localhost:5174"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true); // ✅ 쿠키 포함 요청 허용

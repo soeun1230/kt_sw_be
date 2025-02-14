@@ -2,10 +2,13 @@ package kt.be.model.members;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -13,27 +16,32 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "users")
 public class UserMember implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    public Long userId;
 
     @Column(unique = true, nullable = false)
-    private String email;
+    public String email;
 
     @Column(nullable = false)
-    private String password;
+    public String password;
 
     @Column(name = "user_name")
     public String userName;
@@ -45,10 +53,18 @@ public class UserMember implements UserDetails {
     public Integer userCode;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private ShopCartMember shopCart;
+    public ShopCartMember shopCart;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private PetSitterMember petSitterMember;
+    // @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private PetSitterMember petSitter;
+
+    @OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=true)
+    @JsonManagedReference
+    private List<PetMember> pets;
+
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "user_id")
+    // private UserMember user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -71,4 +87,12 @@ public class UserMember implements UserDetails {
 
     @Override
     public boolean isEnabled() { return true; }
+
+    // public UserMember getUser() {
+    //     return user;
+    // }
+
+    // public void setUser(UserMember user) {
+    //     this.user = user;
+    // }
 }

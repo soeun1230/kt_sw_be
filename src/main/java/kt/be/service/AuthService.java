@@ -8,8 +8,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import kt.be.components.JwtUtil;
+import kt.be.model.members.PetSitterMember;
 import kt.be.model.members.ShopCartMember;
 import kt.be.model.members.UserMember;
+import kt.be.model.repository.PetSitterRepository;
 import kt.be.model.repository.ShopCartRepository;
 import kt.be.model.repository.UserRepository;
 
@@ -19,12 +21,14 @@ public class AuthService {
     
     private final UserRepository userRepository;
     private final ShopCartRepository shopCartRepository;
+    private final PetSitterRepository petSitterRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public AuthService(UserRepository userRepository, ShopCartRepository shopCartRepository, JwtUtil jwtUtil) {
+    public AuthService(UserRepository userRepository, ShopCartRepository shopCartRepository, PetSitterRepository petSitterRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.shopCartRepository = shopCartRepository;
+        this.petSitterRepository = petSitterRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
         this.jwtUtil = jwtUtil;
     }
@@ -64,8 +68,15 @@ public class AuthService {
         UserMember user = userRepository.findByEmail(email).get();
 
         Long userId = user.getUserId();
+
+        Long petSitterId = 0L;
+
+        if(user.getUserCode()==1){
+            PetSitterMember petSitter = petSitterRepository.findByUserId(userId).get();
+            petSitterId = petSitter.getPetSitterId();
+        }
         
-        return new String[] { accessToken, refreshToken, userId.toString()};
+        return new String[] { accessToken, refreshToken, userId.toString(), petSitterId.toString()};
     }
 
     // Refresh Token을 이용해 새로운 Access Token 발급
