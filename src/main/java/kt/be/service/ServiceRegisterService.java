@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import jakarta.persistence.Column;
 import kt.be.model.dto.ServiceDto;
 import kt.be.model.members.ServiceMember;
 import kt.be.model.repository.PetSitterRepository;
@@ -54,15 +53,30 @@ public class ServiceRegisterService {
         return updated;
     }
 
+    public Map<String, Object> ServiceNo(Long serviceId){
+        ServiceMember serviceMember = serviceRepository.findByServiceId(serviceId).get();
+        serviceMember.setStatus(2);
+        serviceRepository.save(serviceMember);
+        Map<String, Object> updated = new HashMap<>();
+
+        updated.put("message", "updated");
+
+        return updated;
+    }
+
     public Map<String, Object> showServiceForUser(Long userId){
         List<ServiceMember> services = serviceRepository.findAllByUserId(userId);
 
         List<ServiceMember> registered = new ArrayList<>();
         List<ServiceMember> notRegistered = new ArrayList<>();
+        List<ServiceMember> denyRegistered = new ArrayList<>();
 
         for(ServiceMember service : services){
             if(service.getStatus()==0){
                 notRegistered.add(service);
+            }
+            else if(service.getStatus()==2){
+                denyRegistered.add(service);
             }
             else{
                 registered.add(service);
@@ -72,6 +86,7 @@ public class ServiceRegisterService {
         Map<String, Object> service = new HashMap<>();
         service.put("registered",registered);
         service.put("notRegistered",notRegistered);
+        service.put("denyRegistered",denyRegistered);
 
         return service;
         
@@ -82,10 +97,14 @@ public class ServiceRegisterService {
 
         List<ServiceMember> registered = new ArrayList<>();
         List<ServiceMember> notRegistered = new ArrayList<>();
+        List<ServiceMember> denyRegistered = new ArrayList<>();
 
         for(ServiceMember service : services){
             if(service.getStatus()==0){
                 notRegistered.add(service);
+            }
+            else if(service.getStatus()==2){
+                denyRegistered.add(service);
             }
             else{
                 registered.add(service);
@@ -95,6 +114,7 @@ public class ServiceRegisterService {
         Map<String, Object> service = new HashMap<>();
         service.put("registered",registered);
         service.put("notRegistered",notRegistered);
+        service.put("denyRegistered",denyRegistered);
 
         return service;
     }
@@ -110,4 +130,29 @@ public class ServiceRegisterService {
         return service;
     }
 
+    public Map<String, Object> deleteService(Long serviceId){
+        ServiceMember serviceMember = serviceRepository.findByServiceId(serviceId).get();
+        serviceRepository.delete(serviceMember);
+
+        Map<String, Object> service = new HashMap<>();
+        service.put("message", "deleted");
+
+        return service;
+    }
+
+    public Map<String, Object> getServicePay(Long userId){
+        List<ServiceMember> services = serviceRepository.findAllByUserId(userId);
+        List<ServiceMember> paid = new ArrayList<>();
+        
+        for(ServiceMember service : services){
+            if(service.payment){
+                paid.add(service);
+            }
+        }
+
+        Map<String, Object> service = new HashMap<>();
+        service.put("message", paid);
+
+        return service;
+    }
 }

@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import kt.be.model.dto.PaymentDto;
 import kt.be.model.dto.PetDto;
 import kt.be.model.dto.UserUpdateDto;
 import kt.be.service.BasicUserService;
+import kt.be.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 
 
@@ -25,6 +27,7 @@ public class UserController{
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final BasicUserService basicUserService;
+    private final PaymentService paymentService;
 
     @GetMapping("/api/users/{userId}")
     public ResponseEntity<Map<String,Object>> userDetail(@PathVariable Long userId) {
@@ -68,5 +71,20 @@ public class UserController{
 
         return ResponseEntity.ok(userInfo);
     }
+
+    @GetMapping("/api/users/services/payment/{userId}")
+    public ResponseEntity<Map<String, Object>> getAllPayment(@PathVariable Long userId) {
+        Map<String, Object> payment = paymentService.getAllPayment(userId);
+
+        return ResponseEntity.ok(payment);
+    }
+
+    @PostMapping("/api/users/services/payment/success")
+    public ResponseEntity<Map<String, Object>> addPaymentRecord(@RequestBody PaymentDto paymentDto) {
+        Map<String, Object> payment = paymentService.addPaymentRecord(paymentDto);
+        
+        return ResponseEntity.ok(payment);
+    }
+    
 }
 
