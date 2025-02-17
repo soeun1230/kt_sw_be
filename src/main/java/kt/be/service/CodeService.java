@@ -10,14 +10,17 @@ import org.springframework.stereotype.Service;
 import kt.be.model.dto.CodeGroupEditDto;
 import kt.be.model.dto.PetKindDto;
 import kt.be.model.dto.PetSizeDto;
+import kt.be.model.dto.PlusCodeDto;
 import kt.be.model.dto.UserStatusDto;
 import kt.be.model.members.CodeTypeMember;
 import kt.be.model.members.PetKindCodeMember;
 import kt.be.model.members.PetSizeCodeMember;
+import kt.be.model.members.PlusCodeMember;
 import kt.be.model.members.UserStatusCodeMember;
 import kt.be.model.repository.CodeTypeRepository;
 import kt.be.model.repository.PetKindRepository;
 import kt.be.model.repository.PetSizeRepository;
+import kt.be.model.repository.PlusRepository;
 import kt.be.model.repository.UserStatusRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +32,7 @@ public class CodeService {
     private final PetKindRepository petKindRepository;
     private final PetSizeRepository petSizeRepository;
     private final UserStatusRepository userStatusRepository;
+    private final PlusRepository plusRepository;
 
 
     public Map<Object, Object> getAllCodes(){
@@ -37,11 +41,13 @@ public class CodeService {
         List<PetKindCodeMember> petKindCodes = petKindRepository.findAll();
         List<PetSizeCodeMember> petSizeCodes = petSizeRepository.findAll();
         List<UserStatusCodeMember> userStatusCodes = userStatusRepository.findAll();
+        List<PlusCodeMember> plusCodes = plusRepository.findAll();
 
         codes.put("codeTypes",codeTypes);
         codes.put("petKindCodes", petKindCodes);
         codes.put("petSizeCodes",petSizeCodes);
         codes.put("userStatusCodes",userStatusCodes);
+        codes.put("plusCodes", plusCodes);
 
         return codes;
     }
@@ -134,6 +140,29 @@ public class CodeService {
         return res;
     }
 
+    public Map<String, Object> plusCodeAdd(PlusCodeDto plusCodeDto) {
+        Map<String, Object> res = new HashMap<>();
+    
+        Optional<PlusCodeMember> existingPlusCode = plusRepository.findByCode(plusCodeDto.getCode());
+    
+        if (existingPlusCode.isEmpty()) {
+            PlusCodeMember newPetSizeCodeMember = PlusCodeMember.builder()
+                .code(plusCodeDto.getCode())
+                .codeExp(plusCodeDto.getCodeExp())
+                .codeGroup(plusCodeDto.getCodeGroup())
+                .type(plusCodeDto.getType())
+                .build();
+    
+                plusRepository.save(newPetSizeCodeMember);
+    
+            res.put("message", "add success");
+        } else {
+            res.put("message", "failed");
+        }
+    
+        return res;
+    }
+
     public Map<String, Object> deleteCodeGroup(Long codeGroup){
         CodeTypeMember codeTypeMember = codeTypeRepository.findByCodeGroup(codeGroup).get();
         codeTypeRepository.delete(codeTypeMember);
@@ -183,6 +212,16 @@ public class CodeService {
     public Map<String, Object> deleteUserStatusCode(Integer userStatusCode){
         UserStatusCodeMember userStatusCodeMember = userStatusRepository.findByCode(userStatusCode).get();
         userStatusRepository.delete(userStatusCodeMember);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "deleted");
+
+        return response;
+    }
+
+    public Map<String, Object> deleteUserPlusCode(Integer plusCode){
+        PlusCodeMember plusCodeMember = plusRepository.findByCode(plusCode).get();
+        plusRepository.delete(plusCodeMember);
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "deleted");

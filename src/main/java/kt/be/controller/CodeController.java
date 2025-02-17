@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import kt.be.model.dto.CodeGroupEditDto;
 import kt.be.model.dto.PetKindDto;
 import kt.be.model.dto.PetSizeDto;
+import kt.be.model.dto.PlusCodeDto;
 import kt.be.model.dto.UserStatusDto;
 import kt.be.service.CodeService;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +61,13 @@ public class CodeController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/api/manager/codes/pluscode")
+    public ResponseEntity<Map<String, Object>> plusCodeAdd(@RequestBody PlusCodeDto plusCodeDto) {
+        Map<String, Object> response = codeService.plusCodeAdd(plusCodeDto);
+        
+        return ResponseEntity.ok(response);
+    }
+
     @PatchMapping("/api/manager/codes/group/delete/{codeGroup}")
     public ResponseEntity<Map<String, Object>> codeGroupDelete(@PathVariable Long codeGroup){
         Map<String, Object> response = codeService.deleteCodeGroup(codeGroup);
@@ -84,6 +92,13 @@ public class CodeController {
     @PatchMapping("/api/manager/codes/userstatus/delete/{code}")
     public ResponseEntity<Map<String, Object>> userStatusDelete(@PathVariable Integer code){
         Map<String, Object> response = codeService.deleteUserStatusCode(code);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/api/manager/codes/pluscode/delete/{code}")
+    public ResponseEntity<Map<String, Object>> plusCodeDelete(@PathVariable Integer code){
+        Map<String, Object> response = codeService.deleteUserPlusCode(code);
 
         return ResponseEntity.ok(response);
     }

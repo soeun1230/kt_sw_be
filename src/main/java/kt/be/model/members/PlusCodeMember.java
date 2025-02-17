@@ -12,36 +12,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
 @Getter
 @Setter
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name="service")
-public class ServiceMember {
+@Table(name="plus_code")
+public class PlusCodeMember {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) 
-    public Long serviceId;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    public Long plusCodeId;
 
     @Column
-    public Integer status;
+    public Long codeGroup;
 
     @Column
-    public Long userId;
+    public Integer code;
 
     @Column
-    public Long petSitterId;
+    public String codeExp;
 
     @Column
-    public String date;
+    public String type;
 
-    @Column
-    public String petKind;
-
-    @Column
-    public Long cost;
-
-    @Column
-    public boolean payment;
 }
