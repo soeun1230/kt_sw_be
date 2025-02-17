@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import kt.be.model.dto.PetSitterEditDto;
 import kt.be.model.dto.PetSitterInfoDto;
 import kt.be.model.members.PetSitterMember;
 import kt.be.model.members.UserMember;
@@ -34,6 +35,53 @@ public class PetSitterService {
 
     //     return response;
     // }
+
+    public Map<String, Object> editPetSitter(PetSitterEditDto petSitterEditDto) {
+        // 기존 PetSitterMember 찾기
+        PetSitterMember petSitter = petSitterRepository.findById(petSitterEditDto.getPetSitterId())
+            .orElseThrow(() -> new IllegalArgumentException("Pet Sitter not found with id: " + petSitterEditDto.getPetSitterId()));
+    
+        // 값이 null이 아닐 경우에만 업데이트
+        if (petSitterEditDto.getService() != null) {
+            petSitter.setService(petSitterEditDto.getService());
+        }
+        if (petSitterEditDto.getCert() != null) {
+            petSitter.setCert(petSitterEditDto.getCert());
+        }
+        if (petSitterEditDto.getCostPerHour() != null) {
+            petSitter.setCostPerHour(petSitterEditDto.getCostPerHour());
+        }
+        if (petSitterEditDto.getPossiblePet() != null) {
+            petSitter.setPossiblePet(petSitterEditDto.getPossiblePet());
+        }
+        if (petSitterEditDto.getPossibleTime() != null) {
+            petSitter.setPossibleTime(petSitterEditDto.getPossibleTime());
+        }
+        if (petSitterEditDto.getAddress() != null) {
+            petSitter.setAddress(petSitterEditDto.getAddress());
+        }
+        if (petSitterEditDto.getInfo() != null) {
+            petSitter.setInfo(petSitterEditDto.getInfo());
+        }
+        if (petSitterEditDto.getPossibleSize() != null) {
+            petSitter.setPossibleSize(petSitterEditDto.getPossibleSize());
+        }
+        if (petSitterEditDto.getWorkExp() != null) {
+            petSitter.setWorkExp(petSitterEditDto.getWorkExp());
+        }
+        if (petSitterEditDto.getSitterImage() != null) {
+            petSitter.setSitterImage(petSitterEditDto.getSitterImage());
+        }
+    
+        // 변경 사항 저장
+        petSitterRepository.save(petSitter);
+    
+        // 응답 반환
+        Map<String, Object> response = new HashMap<>();
+        response.put("updatedPetSitter", petSitter);
+        return response;
+    }
+    
 
     public Map<String, Object> addPetSitter(PetSitterInfoDto petSitterInfoDto){
 

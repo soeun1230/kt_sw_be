@@ -4,19 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import kt.be.model.dto.CancelPetSitterDto;
+import kt.be.model.dto.PetSitterEditDto;
 import kt.be.model.dto.PetSitterInfoDto;
 import kt.be.service.PetSitterService;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -64,19 +63,19 @@ public class PetSitterController {
     }
 
     @PatchMapping("/api/petsitters/mypet/edit")
-    public ResponseEntity<Map<String, String>> editPetSitter(@RequestBody PetSitterInfoDto petSitterInfoDto){
-        petSitterService.cancelPetSitter(cancelPetSitterDto.getUserId(), cancelPetSitterDto.getPetSitterId());
-        Map<String, String> response = new HashMap<>();
+    public ResponseEntity<Map<String, Object>> editPetSitter(@RequestBody PetSitterEditDto petSitterEditDto){
+        Map<String, Object> response = petSitterService.editPetSitter(petSitterEditDto);
 
-        response.put("message", "canceled");
+        response.put("message", "edited");
 
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/api/users/petsitters")
-    public String getMethodName(@RequestParam String param) {
-        return new String();
+    @GetMapping("/api/users/petsitters/all/{userId}")
+    public ResponseEntity<Map<String, Object>> getAllPetSitters(@PathVariable Long userId) {
+        Map<String, Object> petSitters = petSitterService.getAllPetSitter(userId);
+
+        return ResponseEntity.ok(petSitters);
     }
-    
     
 }
